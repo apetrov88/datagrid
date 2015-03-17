@@ -40,6 +40,8 @@ module Datagrid
         class_attribute :filters
         self.filters = []
 
+        class_attribute :dynamic_block_filter, :instance_writer => false
+
       end
       base.send :include, InstanceMethods
     end # self.included
@@ -101,6 +103,12 @@ module Datagrid
 
       end
 
+      def dynamic_filters(&block)
+        self.dynamic_block_filter = proc {
+          instance_eval(&block)
+        }
+      end
+
       protected
 
       def inherited(child_class)
@@ -118,6 +126,12 @@ module Datagrid
           self[filter.name] = filter.default
         end
         super(*args, &block)
+
+        instance_eval(&dynamic_block_filter) if dynamic_block_filter
+      end
+
+      def make_filter(name, type = :default, options = {}, &block)
+        self.class.filter(name, type, options, &block)
       end
 
       def assets # :nodoc:
