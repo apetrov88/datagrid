@@ -12,15 +12,16 @@ module Datagrid
 
         datagrid_attribute :order do |value|
           unless value.blank?
-            value = value.to_sym
-            column = column_by_name(value)
-            unless column 
-              self.class.order_unsupported(value, "no column #{value} in #{self.class}")
-            end
-            unless column.supports_order?
-              self.class.order_unsupported(column.name, "column don't support order" ) 
-            end
-            value
+            value.to_sym
+            # value = value.to_sym
+            # column = column_by_name(value)
+            # unless column 
+            #   self.class.order_unsupported(value, "no column #{value} in #{self.class}")
+            # end
+            # unless column.supports_order?
+            #   self.class.order_unsupported(column.name, "column don't support order" ) 
+            # end
+            # value
           else
             nil
           end
